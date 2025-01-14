@@ -325,19 +325,19 @@ def make_token():
                                 "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
                                 "client_secret":"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",
                                 "redirect_uris":["http://localhost"]}}
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", calendar_url)
+    if os.path.exists("token_google.json"):
+        creds = Credentials.from_authorized_user_file("token_google.json", calendar_url)
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             try:
                 creds.refresh(Request())
             except RefreshError:
-                os.remove("token.json")
+                os.remove("token_google.json")
                 make_token()
         else:
             flow = InstalledAppFlow.from_client_config(credentials, calendar_url)
             creds = flow.run_local_server(port=0, open_browser=False)
-    with open("token.json", "w") as token:
+    with open("token_google.json", "w") as token:
         token.write(creds.to_json())
     cal = build('calendar', 'v3', credentials=creds)
     try:
